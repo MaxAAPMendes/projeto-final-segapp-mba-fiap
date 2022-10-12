@@ -11,7 +11,16 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(bodyParser.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
+
+app.get('/', (req, res) => {
+    res
+    .status(200)
+    .send({
+        status: 'OK',
+        mensage: 'Servidor Rodando e disponível',
+    })
+})
 
 app.get('/products', async (req, res, next) => { 
     var resp = await db.getAllProducts();
