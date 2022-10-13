@@ -6,7 +6,7 @@ Neste projeto, aplicaremos os conhecimentos adquiridos ao longo da disciplina em
 
 ## Contexto
 
-O projeto contém uma API de Produtos que efetua as 4 operações do CRUD (*Create*, *Read*, *Update* e *Delete*)
+O projeto contém uma API de Produtos que efetua as 4 operações do CRUD (*Create*, *Read*, *Update* e *Delete*).
 
 O objetivo é tornarmos esta API segura utilizando das técnicas executadas em aula.
 
