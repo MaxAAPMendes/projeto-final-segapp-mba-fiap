@@ -1,8 +1,9 @@
-var http = require('http'); 
+var http = require('http');
+const { auth,} = require('express-oauth2-jwt-bearer');
 
 const express = require('express') 
 const app = express()
-const port = 3001
+const port = 3002
 
 const db = require("./db");
 
@@ -13,12 +14,34 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+const checkJwt = auth({
+   audience: 'http://localhost:3000', // Chamadores habilitados
+   issuerBaseURL: `http://dev-7faaj9l0.us.auth0.com`,
+});
+
+app.use(function(req, res, next) {
+   res.setHeader('Access-Control-Allow-Origin', '*');
+   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, authorization');
+   res.setHeader('Access-Control-Allow-Credentials', true);
+   next();
+});
+
 app.get('/', (req, res) => {
     res
     .status(200)
     .send({
         status: 'OK',
         mensage: 'Servidor Rodando e disponível',
+    })
+})
+
+app.get('/users', checkJwt, (req, res) => {
+    res
+    .status(200)
+    .send({
+        status: 'OK',
+        mensage: 'Página de usuários',
     })
 })
 
