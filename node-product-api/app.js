@@ -1,5 +1,7 @@
-const http = require('http');
-const { auth,} = require('express-oauth2-jwt-bearer');
+// const http = require('http');
+const https = require('https');
+const fs = require('fs');
+// const { auth,} = require('express-oauth2-jwt-bearer');
 const express = require('express');
 const rotas = require('./routes');
 require('dotenv').config();
@@ -87,7 +89,17 @@ app.delete('/products/:id', login, async (req, res, next) => {
     }
 });
 
+const privateKey = fs.readFileSync('./certificadoDigital/selfsigned.key', 'utf8');
+const certificado = fs.readFileSync('./certificadoDigital/selfsigned.key', 'utf8');
+const credenciais = {
+    key: privateKey,
+    cert: certificado,
+};
+const httpsServer = https.createServer(credenciais, app);
 
-app.listen(port, () => {
-    console.log(`Listening at http://localhost:${port}`)
+// app.listen(port, () => {
+//     console.log(`Listening at http://localhost:${port}`)
+// });
+httpsServer.listen(port, () => {
+    console.log(`Listening at https://localhost:${port}`)
 });
