@@ -21,6 +21,7 @@ O desafio consiste em mitigar as vulnerabilidades e vertentes de ataque conhecid
 ============ FEITO ===============
 1. Mitigar Broken Authentication e Broken Access Control através da implementação de OAuth (0.2);
 
+============ FEITO ===============
 2. Mitigar Man In The Middle/Sniffing através da implementação de comunicação via HTTPS (0.2);
 
 ============ FEITO ===============
