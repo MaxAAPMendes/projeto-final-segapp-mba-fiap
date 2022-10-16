@@ -1,4 +1,5 @@
 const { randomUUID } = require('crypto');
+const bcrypt = require('bcrypt');
 
 async function connect() {
   if (global.connection && global.connection.state !== 'disconnected') {
@@ -121,8 +122,14 @@ const cadastrarUsuario = async (email, senha) => {
   }
   try {
     const conn = await connect();
-    const query = `INSERT INTO users(email, senha) values ("${email}", ${senha});`;
-    const resultadoCadatramento = await conn.execute(query);
+    bcrypt.hash(String(senha), 12, async (error, hash) => {
+      console.log('resultado do hash ----->', hash);
+      if (error) return;
+      const query = `INSERT INTO users(email, senha) values ("${email}", "${hash}");`;
+      const resultadoCadatramento = await conn.execute(query);
+    })
+    // const query = `INSERT INTO users(email, senha) values ("${email}", ${senha});`;
+    // const resultadoCadatramento = await conn.execute(query);
     return {
       status: 'sucesso',
       mensagem: `Usuário ${email} cadastrado com sucesso!!!`
@@ -143,4 +150,5 @@ module.exports = {
   updateProductById,
   deleteProductById,
   cadastrarUsuario,
+  pesquisarUsuario,
 }
