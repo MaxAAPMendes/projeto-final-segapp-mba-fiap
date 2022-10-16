@@ -4,6 +4,7 @@ const express = require('express');
 const rotas = require('./routes');
 require('dotenv').config();
 const login = require('./middleware/login');
+const limiter = require('./middleware/ratelimit');
 
 const app = express()
 const port = 3002
@@ -17,29 +18,7 @@ rotas(app);
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(bodyParser.json());
 app.use(cookieParser());
-
-// const checkJwt = auth({
-//    audience: 'http://localhost:3000', // Chamadores habilitados
-//    issuerBaseURL: `http://dev-7faaj9l0.us.auth0.com`,
-// });
-
-// app.use(function(req, res, next) {
-//    res.setHeader('Access-Control-Allow-Origin', '*');
-//    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, authorization');
-//    res.setHeader('Access-Control-Allow-Credentials', true);
-//    next();
-// });
-
-
-// app.get('/users', checkJwt, (req, res) => {
-//     res
-//     .status(200)
-//     .send({
-//         status: 'OK',
-//         mensage: 'Página de usuários',
-//     })
-// })
+app.use(limiter);
 
 app.get('/products', login, async (req, res, next) => {
     console.log('consultando todos os produtos')
