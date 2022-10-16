@@ -26,7 +26,6 @@ class LoginController {
           });
       }
       if (resposta) {
-        console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
         const token = jwt.sign({
           idUser: usuarios[0].id,
           emailUser: usuarios[0].email,

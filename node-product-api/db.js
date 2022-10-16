@@ -35,10 +35,10 @@ async function getAllProducts() {
 async function getProductById(id) {
   const conn = await connect();
 
-  const query = `SELECT * FROM products WHERE id = "${id}";`;
+  const query = `SELECT * FROM products WHERE id = ?;`;
   console.log(`Executando query: ${query}`);
 
-  const [rows, fields] = await connection.execute(query);
+  const [rows, fields] = await connection.execute(query, [id]);
   return rows;
 }
 
@@ -47,10 +47,10 @@ async function updateProductById(id, name, description, value) {
   try {
     const conn = await connect();
 
-    const query = `UPDATE products SET name = "${name}", description = "${description}", value = ${value} WHERE id = "${id}";`;
+    const query = `UPDATE products SET name = ?, description = ?, value = ? WHERE id = ?;`;
     console.log(`Executando query: ${query}`);
 
-    const [rows] = await conn.execute(query);
+    const [rows] = await conn.execute(query, [name, description, value, id]);
     return rows;
   } catch (err) {
     throw { code: 500, message: 'Erro inesperado ao tentar cadastrar usuário' };
@@ -60,20 +60,20 @@ async function updateProductById(id, name, description, value) {
 async function deleteProductById(id) {
   const conn = await connect();
 
-  const query = `DELETE FROM products WHERE id = "${id}";`;
+  const query = `DELETE FROM products WHERE id = ?;`;
   console.log(`Executando query: ${query}`);
 
-  await connection.execute(query);
+  await connection.execute(query, [id]);
 }
 
 async function insertProduct(name, description, value) {
   const conn = await connect();
 
-  const query = `INSERT INTO products(id, name, description, value) VALUES ("${randomUUID()}", "${name}", "${description}", ${value});`;
+  const query = `INSERT INTO products(id, name, description, value) VALUES ("${randomUUID()}", ?, ?, ?);`;
   console.log(`Executando query: ${query}`);
 
   try {
-    await connection.execute(query);
+    await connection.execute(query, [name, description, value]);
   } catch (err) {
     if (err.errno === 1062) {
       throw { code: 400, message: 'Já existe um producte cadastrado com este usuário!' };
@@ -92,9 +92,9 @@ const pesquisarUsuario = async (email) => {
     }
   } 
   const conn = await connect();
-  const query = `SELECT * FROM users WHERE email = "${email}"`;
+  const query = `SELECT * FROM users WHERE email = ?`;
   try {
-    const [listaUsuarios] = await conn.execute(query);
+    const [listaUsuarios] = await conn.execute(query, [email]);
     console.log('total de linhas', listaUsuarios);
     return {
       status: 'sucesso',
@@ -125,11 +125,9 @@ const cadastrarUsuario = async (email, senha) => {
     bcrypt.hash(String(senha), 12, async (error, hash) => {
       console.log('resultado do hash ----->', hash);
       if (error) return;
-      const query = `INSERT INTO users(email, senha) values ("${email}", "${hash}");`;
-      const resultadoCadatramento = await conn.execute(query);
-    })
-    // const query = `INSERT INTO users(email, senha) values ("${email}", ${senha});`;
-    // const resultadoCadatramento = await conn.execute(query);
+      const query = `INSERT INTO users(email, senha) values (?, ?);`;
+      const resultadoCadatramento = await conn.execute(query, [email, hash]);
+    });
     return {
       status: 'sucesso',
       mensagem: `Usuário ${email} cadastrado com sucesso!!!`
