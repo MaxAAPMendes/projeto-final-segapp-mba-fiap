@@ -5,8 +5,15 @@ const jwt = require('jsonwebtoken');
 
 class LoginController {
   static async logar(req, res, next) {
-    console.log('Executando o metodo logar...');
+    console.log('Executando o método logar...');
     const { email, senha } = req.body;
+    if (!email.includes('@')) {
+      res.status(400).send({
+        status: 'erro',
+        mensagem: 'Falha na autenticação. Dados inválidos. Não foi possível logar',
+      })
+      return;
+    }
     const usuariosEncontrados = await database.pesquisarUsuario(email);
     const { status, usuarios } = usuariosEncontrados;
     if (usuarios && !usuarios.length) {

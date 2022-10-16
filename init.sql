@@ -21,3 +21,5 @@ CREATE TABLE users(
 INSERT INTO users(email, senha) VALUES 
 ('max.sys.pinheiro@gmail.com.br', '123456'),
 ('teste@teste.com.br', '777888');
+-- GRANT ALL PRIVILEGES ON `lab2`.* TO 'test'@'localhost'; # Permite todos os privilegios (SELECT, INSERT, UPDATE e DELETE) para todas as tabelas do db lab2
+--FLUSH PRIVILEGES;

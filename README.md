@@ -18,9 +18,12 @@ Antes de iniciarmos o desafio, faz-se necessário que seja configurada a integra
 
 O desafio consiste em mitigar as vulnerabilidades e vertentes de ataque conhecidas e exploradas durante a disciplina desta API, sendo estes:
 
+============ FEITO ===============
 1. Mitigar Broken Authentication e Broken Access Control através da implementação de OAuth (0.2);
+
 2. Mitigar Man In The Middle/Sniffing através da implementação de comunicação via HTTPS (0.2);
 
+============ FEITO ===============
 3. Mitigar Code Injection através da implementação de validação de campos de entrada e a utilização de Prepared Statements nas comunicações com o Banco de Dados (0.2);...
 
 4. Mitigar Brute Force/Dictionary Attack através da implementação de RateLimit na API (0.2);
@@ -34,7 +37,7 @@ Foi disponibilizada toda a configuração Docker com Docker Compose para executa
 
 Ao executar, os mesmos serão expostos nos endereços:
 
-1. API Produto de produtos (products): http://localhost:3001;
+1. API Produto de produtos (products): http://localhost:3002;
 2. Banco de dados: localhost:3306;
 
 ### Debugando a API
