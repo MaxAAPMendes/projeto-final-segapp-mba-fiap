@@ -1,11 +1,13 @@
 const { randomUUID } = require('crypto');
 
 async function connect() {
-  if (global.connection && global.connection.state !== 'disconnected')
+  if (global.connection && global.connection.state !== 'disconnected') {
     return global.connection;
-
+  }
+  
   const mysql = require("mysql2/promise");
-  const connection = await mysql.createConnection({
+  // const connection = await mysql.createConnection({
+  const connection = await mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     port: 3306,
     user: 'test',
@@ -36,7 +38,6 @@ async function getProductById(id) {
   console.log(`Executando query: ${query}`);
 
   const [rows, fields] = await connection.execute(query);
-
   return rows;
 }
 
@@ -81,23 +82,59 @@ async function insertProduct(name, description, value) {
   }
 }
 
-const cadastrarUsuario = async (email, senha) => {
-  const conn = await connect();
-  const query = 'SELECT * FROM users LIMIT 1000';
-  // const query = `SELECT * FROM users WHERE email = "${email}"`;
-  console.log(`Executando query: ${query}`);
-  try {
-    const [rows, fields] = await connection.execute(query);
+const pesquisarUsuario = async (email) => {
+  console.log('consultado usuarios...');
+  if (!email) {
     return {
-      linhasEncontradas: rows
+      status: 'erro',
+      mensagem: 'email inválido'
+    }
+  } 
+  const conn = await connect();
+  const query = `SELECT * FROM users WHERE email = "${email}"`;
+  try {
+    const [listaUsuarios] = await conn.execute(query);
+    console.log('total de linhas', listaUsuarios);
+    return {
+      status: 'sucesso',
+      usuarios: listaUsuarios,
     }
   } catch (error) {
-    console.log('Erro ao cadastrar novo usuário');
+    console.log('Erro na consulta ao usuário');
     return {
-      mensagem: 'Erro ao tentar cadastrar o usuário'
+      status: 'erro',
+      mensagem: 'Erro na consulta ao usuário',
     }
   }
 }
+
+const cadastrarUsuario = async (email, senha) => {
+  console.log(`Executando método cadatrar usuário ${email} e ${senha}`);
+  const usuariosEncontrados = await pesquisarUsuario(email);
+  console.log('resultado da consulta ao usuário', usuariosEncontrados);
+  const { usuarios } = usuariosEncontrados;
+  if (usuarios && usuarios.length) {
+    return {
+      status: 'atenção',
+      mensagem: `Já existe um usuário cadastrao com email ${usuarios[0].email}!`,
+    }
+  }
+  try {
+    const conn = await connect();
+    const query = `INSERT INTO users(email, senha) values ("${email}", ${senha});`;
+    const resultadoCadatramento = await conn.execute(query);
+    return {
+      status: 'sucesso',
+      mensagem: `Usuário ${email} cadastrado com sucesso!!!`
+    }
+  } catch (error) {
+    console.log('Erro ao cadastrar novo usuário', error.message);
+    return {
+      status: 'erro',
+      mensagem: `Erro ao cadastrar usuário ${error.message}`
+    }
+  }
+};
 
 module.exports = {
   getProductById,

@@ -4,7 +4,8 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
-const authConfig = require("../projeto-final-segapp-mba-fiap/www/src/auth_config.json");
+// const authConfig = require("../projeto-final-segapp-mba-fiap/www/src/auth_config.json");
+const authConfig = require("../www/src/auth_config.json");
 
 const app = express();
 

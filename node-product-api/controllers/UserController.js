@@ -6,10 +6,11 @@ class UserController {
     try {
       const resultado = await database.cadastrarUsuario(email, senha);
       console.log(resultado);
-      res.status(200).send({
-        status: 'sucesso',
-        mensagem: `usuário cadastrado com sucesso ${email} ${senha}`
-      })
+      res.status(201).send(resultado);
+      // res.status(200).send({
+      //   status: 'sucesso',
+      //   mensagem: `usuário cadastrado com sucesso ${email} ${senha}`
+      // })
     } catch (error) {
       res
       .status(500)
