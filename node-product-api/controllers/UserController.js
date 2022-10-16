@@ -11,12 +11,13 @@ class UserController {
       })
       return;
     }
-    if (String(senha).length < 8 || !senha.match(/^[A-Za-z0-9]+$/)) {
-      res.status(400).send({
+    if (
+      !String(senha).match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})")
+    ) {
+      res.status(422).send({
         status: 'erro',
-        mensagem: `Senha no formato inválida.
-        Senha deve ter no mínimo 8 dígitos. 
-        Possuir pelo menos uma letra maiúscula, uma minúscula e um número.`,
+        mensagem: `Deve conter ao menos 10 caracteres entre maiúsculas, 
+        minúsculas, numéricos e caracteres especiais`,
       })
       return;
     }
