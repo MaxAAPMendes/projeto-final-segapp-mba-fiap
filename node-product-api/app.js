@@ -1,7 +1,9 @@
-var http = require('http');
+const http = require('http');
 const { auth,} = require('express-oauth2-jwt-bearer');
 const express = require('express');
 const rotas = require('./routes');
+require('dotenv').config();
+const login = require('./middleware/login');
 
 const app = express()
 const port = 3002
@@ -39,12 +41,13 @@ app.use(cookieParser());
 //     })
 // })
 
-app.get('/products', async (req, res, next) => { 
+app.get('/products', login, async (req, res, next) => {
+    console.log('consultando todos os produtos')
     var resp = await db.getAllProducts();
     res.status(200).json(resp);
 });
 
-app.post('/products', async (req, res, next) => { 
+app.post('/products', login, async (req, res, next) => { 
 
     try{
         var name = req.body.name;
@@ -60,7 +63,7 @@ app.post('/products', async (req, res, next) => {
 });
 
 
-app.get('/products/:id', async (req, res, next) => { 
+app.get('/products/:id', login, async (req, res, next) => { 
 
     try{
         var id = req.params.id;
@@ -74,7 +77,7 @@ app.get('/products/:id', async (req, res, next) => {
     }
 });
 
-app.put('/products/:id', async (req, res, next) => { 
+app.put('/products/:id', login, async (req, res, next) => { 
 
     try{
         var id = req.params.id;
@@ -93,7 +96,7 @@ app.put('/products/:id', async (req, res, next) => {
     }
 });
 
-app.delete('/products/:id', async (req, res, next) => {
+app.delete('/products/:id', login, async (req, res, next) => {
 
     try{
         var id = req.params.id;

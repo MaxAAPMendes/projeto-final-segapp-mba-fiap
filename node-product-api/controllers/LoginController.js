@@ -1,6 +1,7 @@
 const database = require('../db');
 const UserController = require('./UserController');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 class LoginController {
   static async logar(req, res, next) {
@@ -24,12 +25,22 @@ class LoginController {
             mensagem: 'Falha na autenticação. Não foi possível logar',
           });
       }
-      return res
-        .status(200)
-        .send({
-          status: 'sucesso',
-          mensagem: 'Usuário autenticado com sucesso!',
-        })
+      if (resposta) {
+        console.log('process.env.JWT_SECRET', process.env.JWT_SECRET)
+        const token = jwt.sign({
+          idUser: usuarios[0].id,
+          emailUser: usuarios[0].email,
+        }, process.env.JWT_SECRET, {
+          expiresIn: '1h',
+        });
+        return res
+          .status(200)
+          .send({
+            status: 'sucesso',
+            mensagem: 'Usuário autenticado com sucesso!',
+            token,
+          })
+      }
     });
   }
 };
