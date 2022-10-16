@@ -15,7 +15,7 @@ INSERT INTO products(id, name, description, value) VALUES
 CREATE TABLE users(
     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
-    senha VARCHAR(150) NOT NULL
+    senha VARCHAR(256) NOT NULL
 );
 
 INSERT INTO users(email, senha) VALUES 

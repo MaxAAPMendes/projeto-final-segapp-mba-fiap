@@ -1,5 +1,6 @@
 const database = require('../db');
 const UserController = require('./UserController');
+const bcrypt = require('bcrypt');
 
 class LoginController {
   static async logar(req, res, next) {
@@ -9,23 +10,27 @@ class LoginController {
     const { status, usuarios } = usuariosEncontrados;
     if (usuarios && !usuarios.length) {
       res.status(401).send({
-          status: 'error',
+          status,
           mensagem: 'Falha na autenticação. Não foi possível logar',
         });
       return;
     }
-    try {
-      res.status(200).send({
-        status,
-        mensagem: usuarios,
-      });
-    } catch (error) {
-      console.log('Erro não foi possível logar!');
-      res.status(500).send({
-        status: 'erro',
-        mensagem: 'Erro não foi possível logar!'
-      });
-    }
+    bcrypt.compare(String(senha), usuarios[0].senha, (error, resposta) => {
+      if (error) {
+        return res
+          .status(401)
+          .send({
+            status: 'erro',
+            mensagem: 'Falha na autenticação. Não foi possível logar',
+          });
+      }
+      return res
+        .status(200)
+        .send({
+          status: 'sucesso',
+          mensagem: 'Usuário autenticado com sucesso!',
+        })
+    });
   }
 };
 
