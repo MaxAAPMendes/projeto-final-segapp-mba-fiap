@@ -16,7 +16,7 @@ class LoginController {
     }
     const usuariosEncontrados = await database.pesquisarUsuario(email);
     const { status, usuarios } = usuariosEncontrados;
-    if (usuarios && !usuarios.length) {
+    if ((usuarios && !usuarios.length) || status === "erro") {
       res.status(401).send({
           status,
           mensagem: 'Falha na autenticação. Não foi possível logar',
