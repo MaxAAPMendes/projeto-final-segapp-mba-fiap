@@ -90,7 +90,7 @@ app.delete('/products/:id', login, async (req, res, next) => {
 });
 
 const privateKey = fs.readFileSync('./certificadoDigital/selfsigned.key', 'utf8');
-const certificado = fs.readFileSync('./certificadoDigital/selfsigned.key', 'utf8');
+const certificado = fs.readFileSync('./certificadoDigital/selfsigned.crt', 'utf8');
 const credenciais = {
     key: privateKey,
     cert: certificado,
