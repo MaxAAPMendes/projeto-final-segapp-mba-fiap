@@ -1,6 +1,7 @@
 # Projeto Final
 
 # ORIENTAÇÕES PARA RODAR O PROJETO
+- crie uma variavel de ambiente JWT_SECRET (.env)
 - rode o comando o docker-compose up -d
 - execute o projeto: npm run dev
 - cadastre um user através do endpoint /users/cadastro, passando no body/json com email e senha(sugestão: na senha utilize como caracter especial @ ou #)
