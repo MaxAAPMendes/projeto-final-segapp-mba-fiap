@@ -3,17 +3,17 @@ const database = require('../db');
 class UserController {
 
   static async cadastrarUsuario(req, res, next) {
+    console.log("Controller cadastrar usuário.")
     const { email, senha } = req.body;
-    if (!email.includes('@')) {
+    if (!email || !email.includes('@')) {
       res.status(401).send({
         status: 'erro',
         mensagem: 'E-mail no formato inválido. Não foi possível cadastrar usuário!',
       })
       return;
     }
-    if (
-      !String(senha).match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{10,})")
-    ) {
+    const regex = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@]{10,}$/);
+    if (!regex.test(String(senha))) {
       res.status(422).send({
         status: 'erro',
         mensagem: `Deve conter ao menos 10 caracteres entre maiúsculas, 
@@ -23,6 +23,7 @@ class UserController {
     }
     try {
       const resultado = await database.cadastrarUsuario(email, senha);
+      console.log("reutado", resultado)
       res.status(201).send(resultado);
     } catch (error) {
       res

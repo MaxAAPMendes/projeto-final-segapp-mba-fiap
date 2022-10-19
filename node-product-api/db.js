@@ -5,7 +5,6 @@ async function connect() {
   if (global.connection && global.connection.state !== 'disconnected') {
     return global.connection;
   }
-  
   const mysql = require("mysql2/promise");
   // const connection = await mysql.createConnection({
   const connection = await mysql.createPool({
@@ -84,27 +83,27 @@ async function insertProduct(name, description, value) {
 }
 
 const pesquisarUsuario = async (email) => {
-  console.log('consultado usuarios...');
+  console.log('Pesquisando usuarios...', email);
   if (!email) {
     return {
       status: 'erro',
       mensagem: 'email inválido'
     }
   } 
+  const query = `SELECT * FROM users where email = ?;`;
   const conn = await connect();
-  const query = `SELECT * FROM users WHERE email = ?`;
   try {
-    const [listaUsuarios] = await conn.execute(query, [email]);
+    const [listaUsuarios] = await connection.execute(query, [email]);
     console.log('total de linhas', listaUsuarios);
     return {
       status: 'sucesso',
       usuarios: listaUsuarios,
     }
   } catch (error) {
-    console.log('Erro na consulta ao usuário');
+    console.log('Erro na pesquisa ao usuário');
     return {
       status: 'erro',
-      mensagem: 'Erro na consulta ao usuário',
+      mensagem: 'Erro na pesquisa ao usuário',
     }
   }
 }
@@ -113,7 +112,13 @@ const cadastrarUsuario = async (email, senha) => {
   console.log(`Executando método cadatrar usuário ${email} e ${senha}`);
   const usuariosEncontrados = await pesquisarUsuario(email);
   console.log('resultado da consulta ao usuário', usuariosEncontrados);
-  const { usuarios } = usuariosEncontrados;
+  const { usuarios, status, mensagem } = usuariosEncontrados;
+  if (status === "erro") {
+    return {
+      status: 'atenção',
+      mensagem,
+    }
+  }
   if (usuarios && usuarios.length) {
     return {
       status: 'atenção',

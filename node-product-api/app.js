@@ -1,5 +1,5 @@
-// const http = require('http');
-const https = require('https');
+const http = require('http');
+// const https = require('https');
 const fs = require('fs');
 // const { auth,} = require('express-oauth2-jwt-bearer');
 const express = require('express');
@@ -52,7 +52,7 @@ app.get('/products/:id', login, async (req, res, next) => {
         if(rows){
             return res.status(200).send(rows);
         }
-        return res.status(404).send(`Produto ${id} não encontrado!`);
+        return res.status(404).send({status: "atenção", mensagem: `Produto ${id} não encontrado!`});
     }catch(err){
         return res.status(err.code).json(err);
     }
@@ -95,11 +95,11 @@ const credenciais = {
     key: privateKey,
     cert: certificado,
 };
-const httpsServer = https.createServer(credenciais, app);
+// const httpsServer = https.createServer(credenciais, app);
 
-// app.listen(port, () => {
-//     console.log(`Listening at http://localhost:${port}`)
-// });
-httpsServer.listen(port, () => {
-    console.log(`Listening at https://localhost:${port}`)
+app.listen(port, () => {
+    console.log(`Listening at http://localhost:${port}`)
 });
+// httpsServer.listen(port, () => {
+//     console.log(`Listening at https://localhost:${port}`)
+// });
