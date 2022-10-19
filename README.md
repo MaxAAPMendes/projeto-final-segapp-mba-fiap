@@ -1,5 +1,16 @@
 # Projeto Final
 
+# ORIENTAÇÕES PARA RODAR O PROJETO
+- rode o comando o docker-compose up -d
+- execute o projeto: npm run dev
+- cadastre um user através do endpoint /users/cadastro, passando no body/json com email e senha
+- faça login pelo endpoint /login, informando no body email e senha
+- copie o token gerado
+- todas as rotas disponíveis podem ser acessadas informando, além dos parametros, o token no campo Authorization-Bearer Token
+- Disabilite a execução via SSL/TLS
+
+
+
 Seja bem vindo ao projeto final da disciplina de Segurança em Aplicações! 
 
 Neste projeto, aplicaremos os conhecimentos adquiridos ao longo da disciplina em um contexto reduzido.
